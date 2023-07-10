@@ -1,6 +1,8 @@
 <template>
   <v-app>
+    <router-view name="TheHeader"></router-view>
     <router-view></router-view>
+    <router-view name="TheFooter"></router-view>
   </v-app>
 </template>
 

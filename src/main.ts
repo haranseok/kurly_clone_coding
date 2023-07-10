@@ -4,7 +4,6 @@ import App from "./App.vue";
 import vuetify from "./plugins/vuetify";
 import { loadFonts } from "./plugins/webfontloader";
 import Router from "@/router/index";
-import "@/router/guard";
 import i18n from "./i18n";
 import Axios from "axios";
 import Aos from "aos";
