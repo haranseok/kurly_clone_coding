@@ -26,9 +26,9 @@
           </div>
         </div>
         <ul class="icon-box flex">
-          <li><v-icon size="36px">mdi-map-marker-outline</v-icon></li>
-          <li><v-icon size="36px">mdi-heart-outline</v-icon></li>
-          <li><v-icon size="36px">mdi-cart-outline</v-icon></li>
+          <li><v-icon size="34px">mdi-map-marker-outline</v-icon></li>
+          <li><v-icon size="34px">mdi-heart-outline</v-icon></li>
+          <li><v-icon size="34px">mdi-cart-outline</v-icon></li>
         </ul>
       </div>
     </div>
@@ -36,24 +36,112 @@
   <div class="nav-container">
     <div class="nav-inner inner-container jcsb">
       <div class="nav-box cp">
-        <v-icon>mdi-menu</v-icon>
-        카테고리
+        <div>
+          <v-icon>mdi-menu</v-icon>
+          카테고리
+        </div>
+        <nav>
+          <ul>
+            <li v-for="(list, i) in navList.icon" :key="i">
+              <img :src="`./icons/${list}.webp`" alt="" />
+              <p>{{ navList.name[i] }}</p>
+            </li>
+          </ul>
+        </nav>
       </div>
-      <ul class="jcsb center">
+      <ul class="jcsb center" :class="setScroll ? 'padding' : ''">
         <li>신상품</li>
         <li>베스트</li>
         <li>알뜰쇼핑</li>
         <li>특가/혜택</li>
       </ul>
-      <div class="delivery">
+      <div class="search" v-if="setScroll">
+        <input type="text" placeholder="검색어를 입력해주세요" />
+        <v-icon class="cp">mdi-magnify</v-icon>
+      </div>
+      <div class="delivery cp" v-if="isDelivery">
         <span>샛별 · 택배</span>
         배송안내
       </div>
+      <ul class="icon-box flex" v-if="setScroll">
+        <li><v-icon size="34px">mdi-map-marker-outline</v-icon></li>
+        <li><v-icon size="34px">mdi-heart-outline</v-icon></li>
+        <li><v-icon size="34px">mdi-cart-outline</v-icon></li>
+      </ul>
     </div>
   </div>
 </template>
 
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+import { ref } from "vue";
+const isDelivery = ref(true);
+const setScroll = ref(false);
+const navList = ref({
+  icon: [
+    "party",
+    "grass",
+    "apple",
+    "shrimp",
+    "meat",
+    "pot",
+    "salad",
+    "sauce",
+    "coffee",
+    "cookie",
+    "bread",
+    "nutrients",
+    "wine",
+    "whiskey",
+    "living",
+    "cosmetics",
+    "hair",
+    "kitchen",
+    "home",
+    "animal",
+    "baby",
+    "best",
+  ],
+  name: [
+    "뷰티컬리페스타",
+    "채소",
+    "과일 · 견과 · 쌀",
+    "수산·해산·건어물",
+    "정육·계란",
+    "국·반찬·메인요리",
+    "샐러드·간편식",
+    "면·양념·오일",
+    "생수·음료·우유·커피",
+    "간식·과자·떡",
+    "베이커리·치즈·델리",
+    "건강식품",
+    "와인·위스키",
+    "전통주",
+    "생활용품·리빙·캠핑",
+    "스킨케어·메이크업",
+    "헤어·바디·구강",
+    "주방용품",
+    "가전제품",
+    "반려동물",
+    "베이비·키즈·완구",
+    "컬리의 추천",
+  ],
+});
+let scrollY = 0;
+const scrollEvent = () => {
+  window.addEventListener("scroll", () => {
+    scrollY = window.scrollY;
+    if (scrollY > 0) {
+      isDelivery.value = false;
+      setScroll.value = true;
+    } else {
+      isDelivery.value = true;
+      setScroll.value = false;
+    }
+  });
+};
+
+scrollEvent();
+</script>
 
 <style lang="scss" scoped>
 $purple: rgb(95, 0, 128);
@@ -123,6 +211,9 @@ header {
         font-size: 1.1rem;
         font-weight: 600;
         color: #b5b5b5;
+        &:hover {
+          color: $purple;
+        }
       }
       & > :nth-child(2) {
         position: relative;
@@ -149,13 +240,14 @@ header {
         }
       }
     }
-    .icon-box {
-      li {
-        padding: 0 10px;
-      }
-    }
   }
 }
+.icon-box {
+  li {
+    padding: 0 10px;
+  }
+}
+
 .nav-container {
   width: 100%;
   box-shadow: 0px 4px 10px -4px rgba(0, 0, 0, 0.2);
@@ -168,20 +260,56 @@ header {
   font-weight: bold;
   .nav-box {
     width: 10%;
-    &:hover {
+    padding: 12px 0;
+    position: relative;
+    > div:hover {
       color: $purple;
+    }
+    nav {
+      width: 250px;
+      height: 800px;
+      overflow-y: scroll;
+      background: #fff;
+      border: 1px solid #dbdbdb;
+      display: none;
+      position: absolute;
+      top: 52px;
+      ul {
+        li {
+          display: flex;
+          align-items: center;
+          padding: 8px 10px;
+          font-size: 0.8rem;
+          img {
+            width: 25px;
+            margin-right: 10px;
+          }
+          &:hover {
+            color: $purple;
+            background: #f1f1f1;
+          }
+        }
+      }
+    }
+    &:hover nav {
+      display: block;
     }
   }
   .center {
     width: 50%;
     li {
       cursor: pointer;
-      white-space: nowrap;
       &:hover {
         color: $purple;
         text-decoration-line: underline;
         text-underline-position: under;
       }
+    }
+  }
+  .padding {
+    max-width: 450px;
+    li {
+      background: lime;
     }
   }
   .delivery {
@@ -195,6 +323,16 @@ header {
     line-height: 2.5;
     span {
       color: $purple;
+    }
+  }
+  .search {
+    padding: 5px 10px;
+    border-radius: 6px;
+    background: #f7f7f7;
+    input[type="text"] {
+      &::placeholder {
+        font-size: 0.8rem;
+      }
     }
   }
 }
