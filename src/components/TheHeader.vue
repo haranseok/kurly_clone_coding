@@ -41,11 +41,18 @@
           카테고리
         </div>
         <nav>
-          <ul>
-            <li v-for="(list, i) in navList.icon" :key="i">
+          <ul class="main-menu">
+            <li
+              v-for="(list, i) in navList.icon"
+              :key="i"
+              @mouseover="menuList(i)"
+            >
               <img :src="`./icons/${list}.webp`" alt="" />
               <p>{{ navList.name[i] }}</p>
             </li>
+          </ul>
+          <ul class="sub-nav">
+            <li v-for="(subList, i) in subMenu" :key="i">{{ subList }}</li>
           </ul>
         </nav>
       </div>
@@ -126,6 +133,7 @@ const navList = ref({
     "컬리의 추천",
   ],
 });
+const subMenu = ref();
 let scrollY = 0;
 const scrollEvent = () => {
   window.addEventListener("scroll", () => {
@@ -141,6 +149,13 @@ const scrollEvent = () => {
 };
 
 scrollEvent();
+const menuList = (i: number) => {
+  if (i === 0) {
+    subMenu.value = ["a1", "a2"];
+  } else if (i === 1) {
+    subMenu.value = ["b1", "b2"];
+  }
+};
 </script>
 
 <style lang="scss" scoped>
@@ -266,15 +281,15 @@ header {
       color: $purple;
     }
     nav {
-      width: 250px;
-      height: 800px;
-      overflow-y: scroll;
       background: #fff;
       border: 1px solid #dbdbdb;
       display: none;
       position: absolute;
       top: 52px;
-      ul {
+      .main-menu {
+        width: 268px;
+        height: 800px;
+        overflow-y: scroll;
         li {
           display: flex;
           align-items: center;
@@ -294,6 +309,20 @@ header {
     &:hover nav {
       display: block;
     }
+    nav:hover .sub-nav {
+      display: block;
+    }
+    .sub-nav {
+      position: absolute;
+      top: 0px;
+      left: 268px;
+      display: none;
+      overflow-y: scroll;
+      width: 268px;
+      height: 800px;
+      background: #eee;
+      animation: 0.2s linear 0s 1 normal none running subMenu;
+    }
   }
   .center {
     width: 50%;
@@ -308,9 +337,6 @@ header {
   }
   .padding {
     max-width: 450px;
-    li {
-      background: lime;
-    }
   }
   .delivery {
     width: 170px;
@@ -334,6 +360,14 @@ header {
         font-size: 0.8rem;
       }
     }
+  }
+}
+@keyframes subMenu {
+  0% {
+    width: 0;
+  }
+  100% {
+    width: 268px;
   }
 }
 </style>
